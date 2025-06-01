@@ -37,8 +37,8 @@
                    hl-todo iter2 languagetool lsp-ivy lsp-jedi
                    lsp-mode lsp-pyright lsp-ui magit marginalia
                    multiple-cursors orderless org-download org-fragtog
-                   projectile promise python-lsp-server python-mode
-                   pyvenv-auto rainbow-delimiters tempel-collection
+                   promise python-lsp-server python-mode pyvenv-auto
+                   rainbow-delimiters tempel-collection
                    tree-sitter-langs vertico))
  '(package-vc-selected-packages
    '((copilot :url "https://github.com/copilot-emacs/copilot.el" :branch

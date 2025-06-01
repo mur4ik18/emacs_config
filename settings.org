@@ -411,16 +411,6 @@ Very good terminal emulator can works with linux programs
 (add-to-list 'default-frame-alist '(alpha . (100 . 100)))
 #+END_SRC
 
-#+BEGIN_src emacs-lisp
-;; org mode
-;;(use-package org
-;;  :ensure t
-;;  :demand t
-;;  :config
-;;  (add-hook 'org-mode-hook #'org-indent-mode))
-;;(use-package org-modern :ensure t :demand t)
-;;(add-hook 'org-mode-hook #'org-modern-mode)
-#+end_src
 
 #+BEGIN_SRC emacs-lisp
 
@@ -547,8 +537,6 @@ lsp-mode buffer and trying different things that you find there.
     ;        (setq lsp-pyright-python-executable-cmd "python3")))
 
 
-
-
     (use-package lsp-ui
       :commands lsp-ui-mode
       :hook (lsp-mode . lsp-ui-mode)
@@ -557,24 +545,7 @@ lsp-mode buffer and trying different things that you find there.
       (lsp-ui-doc-show-with-cursor t))
 #+end_src
 
-#+RESULTS:
 
-*** Projectile
-
-#+begin_src emacs-lisp
-  (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-#+end_src
-
-
-*** Complitation
-#+begin_src emacs-lisp
-  ;(use-package company-lsp
-  ;  :after company
-  ;  :hook (lsp-mode . company-lsp-enable)
-  ;  :bind (:map lsp-mode-map
-  ;     ("<tab>" . company-indent-or-complete-common)))
-#+end_src
 
 *** ivy
 #+begin_src emacs-lisp
@@ -589,16 +560,6 @@ lsp-mode buffer and trying different things that you find there.
       (which-key-mode))
 #+end_src
 
-*** snippets
-git clone https://github.com/AndreaCrotti/yasnippet-snippets ~/.emacs.d/snippets/
-#+begin_src emacs-lisp
-  (use-package yasnippet
-     :ensure t
-     :config
-     (yas-global-mode 1)
-   ;; Optionally, set the snippet directory
-     (setq yas-snippet-dirs '("~/.emacs.d/snippets/snippets/"))) 
-#+end_src
 
 *** python shell
 #+begin_src emacs-lisp
