@@ -1,5 +1,4 @@
 ;;; -*- lexical-binding: t; -*-
-
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -325,15 +324,15 @@
   :config
   (setq treesit-language-source-alist
    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     ;; (css "https://github.com/tree-sitter/tree-sitter-css")
-     ;; (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     ;; (html "https://github.com/tree-sitter/tree-sitter-html")
-     ;; (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
      (json "https://github.com/tree-sitter/tree-sitter-json")
-     ;; (make "https://github.com/alemuller/tree-sitter-make")
-     ;; (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
      (python "https://github.com/tree-sitter/tree-sitter-python")
-     ;; (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
      (typst "https://github.com/uben0/tree-sitter-typst")))
   (setq major-mode-remap-alist
@@ -341,10 +340,10 @@
           (bash-mode . bash-ts-mode)
           ;; (js2-mode . js-ts-mode)
           (json-mode . json-ts-mode)
-          ;; (css-mode . css-ts-mode)
+          (css-mode . css-ts-mode)
           (python-mode . python-ts-mode)))
   ;; ;; Run to install languages
-  ;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+  ;;(mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
   )
 
 ;;; More opinionated packages
@@ -380,9 +379,9 @@
 
 
 (use-package tao-theme :ensure t :demand t
-  ;; :config
-  ;; (fringe-mode 0)
-  ;; (load-theme 'tao-yin t)
+  :config
+  (fringe-mode 0)                       ;
+  (load-theme 'tao-yang t)
   )
 
 ;; Trim unnecessary whitespace.
@@ -473,37 +472,12 @@
   (setq rustic-lsp-client 'eglot
         rustic-format-on-save t))
 
-
-(use-package lsp-mode
- :init
- ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-(setq lsp-keymap-prefix "C-c l")
- :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-        ((python-mode
-          c-mode
-          web-mode
-
-          ) . lsp-deferred)
-        ;; if you want which-key integration
-        (lsp-mode . lsp-enable-which-key-integration))
- :commands lsp)
-
-; (use-package lsp-pyright
- ;:hook (python-mode . (lambda () (require 'lsp-pyright)))
- ;:init (when (executable-find "python3")
- ;        (setq lsp-pyright-python-executable-cmd "python3")))
-
-
- (use-package lsp-ui
-   :commands lsp-ui-mode
-   :hook (lsp-mode . lsp-ui-mode)
-   :custom
-   (lsp-ui-doc-enable t)
-   (lsp-ui-doc-show-with-cursor t))
-
 (use-package python-mode
-  :ensure t
-  :bind* (("C-c C-d" . duplicate-dwim)))
+  :config
+  (define-key python-mode-map (kbd "C-c C-b")
+    #'python-shell-send-block-by-markers)
+  :bind* (("C-c C-b" . python-shell-send-block-by-markers)
+          ("C-c C-d" . duplicate-dwim)))
 
 (use-package pyvenv
   :ensure t
@@ -511,13 +485,8 @@
   ;(add-hook 'python-mode-hook 'pyvenv-activate)
   (pyvenv-mode 1))
 
-(use-package evil-nerd-commenter
-          :bind ("M-;" . evilnc-comment-or-uncomment-lines))
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
-
-
 
 (use-package paredit :ensure t :demand t)
 
@@ -571,10 +540,6 @@
 (setq org-latex-preview-numbered t)
 
 
-;(setq org-format-latex-options
-;     (plist-put org-format-latex-options :scale 1.5))
-
-
 (use-package blacken
 :ensure t
 :hook (python-mode . blacken-mode)
@@ -611,11 +576,10 @@
     #'stop-yobaniy-repl))
 
 
-  ;; 1) Определяем функцию для отправки кода между маркерами
+
 (defun python-shell-send-block-by-markers (start-marker end-marker)
   "Отправить в Python-контейнер код между строками START-MARKER и END-MARKER."
   (interactive
-   ;; по умолчанию ищем маркеры "# start" и "# end"
    (list (read-string "Start marker (regex): " "# start")
          (read-string "End marker (regex): "   "# end")))
   (let (beg end)
@@ -634,10 +598,6 @@
     (python-shell-send-region beg end)
     (message "Sent region %d…%d to Python" beg end)))
 
-;; 2) Закидываем функцию в python-mode и вешаем на удобную комбинацию
-(with-eval-after-load 'python
-  (define-key python-mode-map (kbd "C-c C-b")
-    #'python-shell-send-block-by-markers))
 
 (setq dabbrev-case-fold-search nil)
 
