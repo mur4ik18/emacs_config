@@ -287,7 +287,7 @@
 (use-package embark :ensure t :demand t
   :bind
   (;("C-;" . embark-act)         ;; pick some comfortable binding
-   ("C-." . embark-act)        ;; good alternative: M-.
+   ("C-;" . embark-act)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -435,7 +435,7 @@
 
 (use-package eglot
   :after embark
-  :bind ("C-." . eglot-code-actions)
+  :bind ("C-," . eglot-code-actions)
   :config
   (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider))
   (keymap-set embark-identifier-map "r" #'eglot-rename)
@@ -477,7 +477,8 @@
   (define-key python-mode-map (kbd "C-c C-b")
     #'python-shell-send-block-by-markers)
   :bind* (("C-c C-b" . python-shell-send-block-by-markers)
-          ("C-c C-d" . duplicate-dwim)))
+          ("C-c C-d" . duplicate-dwim)
+          ("C-c d" . stop-yobaniy-repl)))
 
 (use-package pyvenv
   :ensure t
@@ -502,6 +503,18 @@
   :demand t)
 
 
+
+
+;; (use-package combobulate
+;;    :custom
+;;    ;; You can customize Combobulate's key prefix here.
+;;    ;; Note that you may have to restart Emacs for this to take effect!
+;;    (combobulate-key-prefix "C-c o")
+;;    :hook ((prog-mode . combobulate-mode))
+;;    ;; Amend this to the directory where you keep Combobulate's source
+;;    ;; code.
+;;    :load-path ("path-to-git-checkout-of-combobulate"))
+
 ;;; ORG
 ;;; very cool org plugin
 (use-package org-download
@@ -515,38 +528,36 @@
   ("C-M-y" . org-download-clipboard)
   :config
     (require 'org-download))
+
 (setq-default org-download-image-dir "/home/alex/Notes/pngs/")
 
 (setq org-image-actual-width (list 720))
 
 
 ;; Define function to insert a src block
-  (defun org-insert-src-block ()
+(defun org-insert-src-block ()
     "Insert an Org-mode src block at cursor."
     (interactive)
     (insert "#+begin_src\n\n#+end_src")
     (forward-line -1))  ; Move cursor to the empty line between begin/end
 
   ;; Bind to a key (e.g., C-c s) in Org mode
-  (use-package org
+(use-package org
     :bind (:map org-mode-map
            ("C-c s" . org-insert-src-block)))
 
-  (use-package org-fragtog
+(use-package org-fragtog
     :ensure t)
-  (add-hook 'org-mode-hook 'org-fragtog-mode)
-  (setq org-startup-with-latex-preview t)
+(add-hook 'org-mode-hook 'org-fragtog-mode)
+(setq org-startup-with-latex-preview t)
 
 (setq org-latex-preview-numbered t)
 
-
 (use-package blacken
-:ensure t
-:hook (python-mode . blacken-mode)
-:custom
-(blacken-line-length 120))
-
-
+  :ensure t
+  :hook (python-mode . blacken-mode)
+  :custom
+  (blacken-line-length 120))
 
 ;;; Custom functions
 (defun sudo-find-file (file-name)
@@ -571,10 +582,14 @@
                 (python-shell-get-process-or-error))))
     (when proc
       (interrupt-process proc))))
+
 (with-eval-after-load 'python
   (define-key python-mode-map (kbd "C-c d")
     #'stop-yobaniy-repl))
 
+(defun python_go_to_up_marker ()
+  (list "# start" "# end")
+  )
 
 
 (defun python-shell-send-block-by-markers (start-marker end-marker)
