@@ -53,6 +53,7 @@
 (setq ns-right-alternate-modifier nil)
 
 
+
 (use-package emacs :ensure nil
   :bind (("M-o" . other-window)
          ("M-l" . downcase-dwim)
@@ -334,6 +335,7 @@
      (python "https://github.com/tree-sitter/tree-sitter-python")
      (toml "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+     (nix "https://github.com/nix-community/tree-sitter-nix")
      (typst "https://github.com/uben0/tree-sitter-typst")))
   (setq major-mode-remap-alist
         '((yaml-mode . yaml-ts-mode)
@@ -341,6 +343,7 @@
           ;; (js2-mode . js-ts-mode)
           (json-mode . json-ts-mode)
           (css-mode . css-ts-mode)
+          (nix-mode . nix-ts-mode)
           (python-mode . python-ts-mode)))
   ;; ;; Run to install languages
   ;;(mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
@@ -378,10 +381,10 @@
 ;; Lovely themes
 
 
-(use-package tao-theme :ensure t :demand t
+(use-package modus-themes :ensure t :demand t
   :config
   (fringe-mode 0)                       ;
-  (load-theme 'tao-yang t)
+  (load-theme 'modus-operandi t)
   )
 
 ;; Trim unnecessary whitespace.
@@ -436,6 +439,8 @@
 (use-package eglot
   :after embark
   :bind ("C-," . eglot-code-actions)
+  :hook ((python-mode . eglot-ensure)
+         (nix-mode . eglot-ensure))
   :config
   (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider))
   (keymap-set embark-identifier-map "r" #'eglot-rename)
@@ -465,6 +470,9 @@
   :custom
   ;; (optional) If you want to ensure your typst tree sitter grammar version is greater than the minimum requirement
   (typst-ts-mode-grammar-location (expand-file-name "tree-sitter/libtree-sitter-typst.so" user-emacs-directory)))
+
+(use-package nix-mode :ensure t :demand t
+  )
 
 (use-package rustic :ensure t :demand t
   :hook (rustic-mode . electric-pair-mode)
