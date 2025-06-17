@@ -21,7 +21,7 @@
 
   outputs = inputs@{ self, nix-darwin, nixpkgs, nix-homebrew, homebrew-core, homebrew-cask }:
   let
-    configuration = { pkgs, ... }: {
+    air_configuration = { pkgs, ... }: {
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
@@ -57,20 +57,20 @@
       environment.variables = {
         TERM = "xterm-256color";
       };
+      system.activationScripts.postActivation.text = ''
+      # Following line should allow us to avoid a logout/login cycle when changing settings
+      sudo -u alexkotov /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+      '';
 
       system.defaults.CustomUserPreferences = {
         "com.apple.symbolichotkeys" = {
           AppleSymbolicHotKeys = {
-            # Disable 'Cmd + Space' for Spotlight Search
-            "64" = {
-              enabled = false;
+            "60" = { enabled = false; };
+            "61" = { enabled = false; };
+            "64" = { enabled = false; };
+            "65" = { enabled = false; };
             };
-            # Disable 'Cmd + Alt + Space' for Finder search window
-            "65" = {
-              enabled = false;
-            };
-          };
-       };
+         };        
       };
 
       system.keyboard.enableKeyMapping = true;
@@ -121,7 +121,7 @@
             mutableTaps = false;
           };
         }
-	configuration
+	    air_configuration
       ];
     };
   };
