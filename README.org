@@ -1,0 +1,5 @@
+#+title: My config
+
+I use emacs + org.
+
+My config is builded on config of @remimimimimi
