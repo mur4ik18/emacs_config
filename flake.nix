@@ -26,14 +26,18 @@
       # $ nix-env -qaP | grep wget
       environment.systemPackages =
         [ 
-	pkgs.emacs
-        pkgs.telegram-desktop
-	];
+	        pkgs.emacs
+          pkgs.telegram-desktop
+          pkgs.discord
+          pkgs.python313
+          pkgs.nodejs
+          pkgs.brave
+	      ];
 
       nix-homebrew.enable = true; # https://github.com/zhaofengli/nix-homebrew
       homebrew.enable     = true;
-      homebrew.brews    = ["cowsay" "stow"];
-
+      homebrew.brews    = ["cowsay" "stow" "libomp"];
+      nixpkgs.config.allowUnfree = true;
       programs.bash.completion.enable = true;
 
       programs.zsh.enable = true;
@@ -46,13 +50,14 @@
       # Applications
       system.defaults = {
         dock.persistent-apps = [
-	  "/System/Applications/Launchpad.app"
-	  "/Applications/Safari.app"
-	  "/Applications/Nix Apps/Telegram.app"
-	  "/Applications/Nix Apps/Emacs.app"
-	];
+	        "/System/Applications/Launchpad.app"
+          "/Applications/Nix Apps/Brave Browser.app"
+	        "/Applications/Nix Apps/Telegram.app"
+	        "/Applications/Nix Apps/Emacs.app"
+          "/Applications/Nix Apps/Discord.app"
+	      ];
+        dock.autohide = true;
       };
-
 
       environment.variables = {
         TERM = "xterm-256color";
@@ -70,7 +75,7 @@
             "64" = { enabled = false; };
             "65" = { enabled = false; };
             };
-         };        
+         };
       };
 
       system.keyboard.enableKeyMapping = true;
@@ -81,7 +86,7 @@
       nix.settings.experimental-features = "nix-command flakes";
       
       # Enable alternative shell support in nix-darwin.
-      # programs.fish.enable = true;
+      programs.fish.enable = true;
 
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
@@ -99,7 +104,7 @@
     # $ darwin-rebuild build --flake .#Alexs-MacBook-Air
     darwinConfigurations."Alexs-MacBook-Air" = nix-darwin.lib.darwinSystem {
       modules = [ 
-	nix-homebrew.darwinModules.nix-homebrew
+	      nix-homebrew.darwinModules.nix-homebrew
         {
           nix-homebrew = {
             # Install Homebrew under the default prefix
@@ -121,7 +126,7 @@
             mutableTaps = false;
           };
         }
-	    air_configuration
+	      air_configuration
       ];
     };
   };
